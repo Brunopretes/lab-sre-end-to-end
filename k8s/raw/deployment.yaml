@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab-sre-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lab-sre-api
+  template:
+    metadata:
+      labels:
+        app: lab-sre-api
+    spec:
+      containers:
+        - name: api
+          image: lab-sre-api
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
