@@ -3,6 +3,7 @@ replicaCount: 1
 image:
   repository: lab-sre-api
   pullPolicy: IfNotPresent
+  tag: v2
 
 service:
   type: NodePort
@@ -10,3 +11,15 @@ service:
 
 config:
   appName: lab-sre-api
+
+resources: {}
+
+autoscaling:
+  enabled: false
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
