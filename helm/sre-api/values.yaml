@@ -1,0 +1,12 @@
+replicaCount: 1
+
+image:
+  repository: lab-sre-api
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 8000
+
+config:
+  appName: lab-sre-api
