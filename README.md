@@ -101,3 +101,5 @@ Observação
 
 Este laboratório foi executado em ambiente local (VM + Minikube).
 Alguns componentes de observabilidade podem exigir mais recursos em ambientes de produção.
+
+O ambiente local apresentou limitação de recursos para execução contínua da stack de observabilidade. A arquitetura foi validada e documentada, e a execução prática será retomada em ambiente com maior capacidade.
