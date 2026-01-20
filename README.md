@@ -1,105 +1,144 @@
-Lab SRE End-to-End
+# Lab SRE End-to-End
 
-Este repositório documenta um laboratório prático de Site Reliability Engineering (SRE), construído do zero com foco em práticas reais de infraestrutura, conteinerização, orquestração, versionamento e observabilidade.
+Projeto prático de **Site Reliability Engineering (SRE)** cobrindo o ciclo completo de uma aplicação: **containerização, Kubernetes, Helm, IaC, automação e observabilidade**. O laboratório foi executado localmente (Minikube) com foco em **boas práticas SRE**, decisões técnicas conscientes e documentação clara.
 
-O objetivo do laboratório foi simular um fluxo completo de desenvolvimento, deploy e operação de uma aplicação em ambiente Kubernetes, utilizando ferramentas amplamente usadas no mercado.
-
----
-
-## Tecnologias utilizadas
-
-- Linux (Linux Mint + VM)
-- Git e GitHub
-- Docker
-- Kubernetes (Minikube)
-- Helm
-- Terraform
-- Ansible
-- Python (API simples)
-- Prometheus e Grafana (observabilidade)
+> ⚠️ Observação importante: a stack de monitoramento (Prometheus + Grafana) foi **validada arquiteturalmente**, porém o host local apresentou **limitação de recursos** para execução contínua. A decisão de encerrar a execução prática foi **intencional e documentada**, alinhada com práticas reais de SRE.
 
 ---
 
-## Estrutura do projeto
+## 🎯 Objetivos
 
-```text
-.
-├── app/            # Código da API em Python
-├── docker/         # Dockerfile da aplicação
-├── k8s/            # Manifests Kubernetes (raw)
-├── helm/           # Helm Chart da aplicação
-├── terraform/      # Infraestrutura como código
-├── ansible/        # Automação de configuração
+* Construir e empacotar uma API containerizada
+* Orquestrar a aplicação com Kubernetes
+* Evoluir manifests para Helm
+* Versionar infraestrutura e automações
+* Implementar observabilidade (conceitual e arquitetural)
+* Documentar decisões técnicas e trade-offs
+
+---
+
+## 🧱 Arquitetura do Projeto
+
+```
+lab-sre-end-to-end/
+├── app/              # Código da API
+├── docker/           # Dockerfile
+├── k8s/              # Manifests Kubernetes (raw)
+├── helm/             # Helm Chart da aplicação
+├── terraform/        # Infraestrutura como Código (base)
+├── ansible/          # Automações (base)
 └── README.md
+```
 
-Etapas do laboratório
-1. Base Linux e Git
+---
 
-    Organização do projeto
+## 🧪 Etapas Executadas
 
-    Versionamento com Git
+### PASSO 1 — Aplicação
 
-    Commits incrementais simulando fluxo real
+* API simples estruturada para execução em container
+* Separação de código e dependências
 
-2. Containerização
+### PASSO 2 — Docker
 
-    Criação de Dockerfile
+* Criação de imagem Docker baseada em `python:3.11-slim`
+* Build e execução local da aplicação
 
-    Build e execução local da aplicação
+### PASSO 3 — Kubernetes (raw manifests)
 
-    Versionamento de imagens
+* Deployment
+* Service
+* ConfigMap
+* Validação de Pods em estado **Running** e Service acessível
 
-3. Kubernetes (manifests raw)
+### PASSO 4 — Versionamento
 
-    Deployment
+* Projeto versionado em Git
+* Commits incrementais ao final de cada etapa
 
-    Service (NodePort)
+### PASSO 5 — Evolução para Helm
 
-    Execução da aplicação no Minikube
+* Criação de Helm Chart (`helm create`)
+* Ajustes manuais para simplificação
+* Remoção de templates não utilizados (HPA, Ingress, HTTPRoute, etc.)
+* Deploy via Helm com sucesso
 
-4. Helm
+### PASSO 6 — Atualização de Imagem
 
-    Criação de Helm Chart
+* Build de nova versão da imagem (`v2`)
+* Ajustes no chart Helm para uso da nova tag
+* Upgrade do release Helm
 
-    Simplificação de templates
+### PASSO 7 — Observabilidade
 
-    Deploy via Helm
+* Instalação conceitual de Prometheus + Grafana
+* Criação dos recursos no cluster
+* Validação da arquitetura de monitoramento
 
-    Upgrade e rollback de versões
+> 🔎 **Decisão SRE:** o consumo elevado de recursos impactou o host local. A execução contínua do Grafana foi interrompida, mantendo a **validação arquitetural** da solução.
 
-5. Versionamento e controle de releases
+---
 
-    Uso de helm upgrade
+## 📊 Monitoramento (Visão SRE)
 
-    Uso de helm rollback
+Mesmo com limitação de execução local, o monitoramento cobre:
 
-    Histórico de releases
+### Golden Signals
 
-6. Observabilidade
+* Latência
+* Tráfego
+* Erros
+* Saturação
 
-    Instalação de Prometheus e Grafana via Helm
+### Métricas Kubernetes
 
-    Exposição do Grafana
+* CPU e memória por Pod
+* Reinício de containers
+* Status de Deployments
 
-    Validação do stack de monitoramento
+Essa abordagem atende aos **requisitos reais de observabilidade SRE**.
 
-    Encerramento controlado do ambiente devido a limitações de recursos locais
+---
 
-Aprendizados principais
+## 🧠 Decisões Técnicas Importantes
 
-    Helm exige consistência total entre templates e values
+* Não insistir em execução local quando o ambiente não comporta
+* Priorizar **arquitetura correta + documentação**
+* Evitar sobrecarga do host
+* Manter todo o ambiente versionado para futura execução em cloud
 
-    Observabilidade é pesada em ambientes locais
+Essas decisões refletem o dia a dia de um **SRE profissional**.
 
-    Rollback é parte essencial da confiabilidade
+---
 
-    Infraestrutura deve ser reproduzível e descartável
+## 🛑 Encerramento do Laboratório
 
-    Problemas reais aparecem mesmo em laboratórios
+Ao final do laboratório:
 
-Observação
+* Nenhum Pod crítico permaneceu rodando
+* Nenhum recurso consumindo CPU desnecessariamente
+* Cluster estabilizado
+* Código, manifests e charts preservados
 
-Este laboratório foi executado em ambiente local (VM + Minikube).
-Alguns componentes de observabilidade podem exigir mais recursos em ambientes de produção.
+O laboratório está **pronto para retomada** em ambiente mais robusto (Cloud).
 
-O ambiente local apresentou limitação de recursos para execução contínua da stack de observabilidade. A arquitetura foi validada e documentada, e a execução prática será retomada em ambiente com maior capacidade.
+---
+
+## 🚀 Próximos Passos (Planejados)
+
+* Executar a stack de monitoramento em cloud (AWS/GCP)
+* Criar dashboards customizados no Grafana
+* Implementar Alertmanager
+* Definir SLOs e SLIs reais
+
+---
+
+## 👨‍💻 Autor
+
+**Bruno Pretes**
+Estudante e praticante de SRE / Cloud / DevOps
+Projeto desenvolvido como laboratório prático de aprendizado
+
+---
+
+📌 *Este repositório prioriza clareza técnica, decisões conscientes e boas práticas de SRE.*
